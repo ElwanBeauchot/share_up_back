@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.devices import router as devices_router
+from app.routes.devices import init_indexes
 
 app = FastAPI()
 app.include_router(devices_router)
@@ -14,6 +15,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+async def startup_event():
+    await init_indexes()
 
 @app.get("/")
 async def get_data():
