@@ -15,6 +15,6 @@ app.add_middleware(
 )
 
 
-@app.get("/api/v1/")
+@app.get("/")
 async def get_data():
-    return {"message": "Share Up API", "data": []}
+    return {"message": "Coonecté à l'API", "data": []}
