@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes.devices import router as devices_router
 
 app = FastAPI()
+app.include_router(devices_router)
 
 # CORS pour Flutter
 app.add_middleware(
