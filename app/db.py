@@ -1,7 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorClient
+from app.config import settings
 
-MONGO_URL = "mongodb+srv://elwanblb_db_user:3i4Ye1Whtw1PHLpX@shareup.e1ebvub.mongodb.net/?appName=ShareUp"
-
-client = AsyncIOMotorClient(MONGO_URL)
-db = client.share_up_db
-devices_collection = db.devices
+client = AsyncIOMotorClient(settings.mongo_url, tls=True)
+db = client[settings.database_name]
+devices_collection = db[settings.devices_collection_name]
