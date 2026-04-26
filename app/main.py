@@ -19,4 +19,4 @@ app.add_middleware(
 
 @app.get("/")
 async def get_data():
-    return {"message": "Connecté à l'API", "data": []}
+    return {"message": "Connecté à l'API yahou", "data": []}
