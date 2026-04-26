@@ -3,7 +3,7 @@ name: Deploy ShareUp to VPS
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
