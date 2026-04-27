@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.core.security import verify_api_key
 from app.routes.devices import router as devices_router
 from app.routes.p2p import router as p2p_router
 from app import logging_config  # Import pour configurer le logging
@@ -18,5 +20,5 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def get_data():
+async def get_data(dep=Depends(verify_api_key)):
     return {"message": "Connecté à l'API de ShareUp", "data": []}

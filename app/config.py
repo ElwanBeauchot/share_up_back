@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     database_name: str
     devices_collection_name: str
     debug: bool
+    api_key: str
 
     class Config:
         env_file = ".env"
