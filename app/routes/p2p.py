@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+
+from app.core.security import verify_api_key
 from app.schemas import OfferMessage, AnswerMessage, IceMessage, P2PMessageResponse
 from app.services.p2p_service import store_offer, store_answer, store_ice, get_messages
 
@@ -6,7 +8,7 @@ router = APIRouter(prefix="/p2p", tags=["p2p"])
 
 
 @router.post("/offer")
-async def receive_offer(message: OfferMessage):
+async def receive_offer(message: OfferMessage, dep=Depends(verify_api_key)):
     if not message.from_uuid or not message.to_uuid or not message.sdp:
         raise HTTPException(status_code=400, detail="from, to et sdp requis")
     
@@ -15,7 +17,7 @@ async def receive_offer(message: OfferMessage):
 
 
 @router.post("/answer")
-async def receive_answer(message: AnswerMessage):
+async def receive_answer(message: AnswerMessage, dep=Depends(verify_api_key)):
     if not message.from_uuid or not message.to_uuid or not message.sdp:
         raise HTTPException(status_code=400, detail="from, to et sdp requis")
     
@@ -24,7 +26,7 @@ async def receive_answer(message: AnswerMessage):
 
 
 @router.post("/ice")
-async def receive_ice(message: IceMessage):
+async def receive_ice(message: IceMessage, dep=Depends(verify_api_key)):
     if not message.from_uuid or not message.to_uuid or not message.candidate:
         raise HTTPException(status_code=400, detail="from, to et candidate requis")
     
