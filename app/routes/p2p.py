@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import StreamingResponse
 
 from app.core.security import verify_api_key
 from app.schemas import OfferMessage, AnswerMessage, IceMessage, P2PMessageResponse
-from app.services.p2p_service import store_offer, store_answer, store_ice, get_messages
+from app.services.p2p_service import store_offer, store_answer, store_ice, event_stream
 import logging
 router = APIRouter(prefix="/p2p", tags=["p2p"])
 logger = logging.getLogger('share_up_app')
@@ -35,7 +36,13 @@ async def receive_ice(message: IceMessage, dep=Depends(verify_api_key)):
     return {"status": "ice candidate stored"}
 
 
-@router.get("/messages/{uuid}")
-async def get_messages_endpoint(uuid: str):
-    messages = await get_messages(uuid)
-    return {"messages": messages}
+# Ancien endpoint de polling (remplacé par GET /p2p/events/{uuid})
+# @router.get("/messages/{uuid}")
+# async def get_messages_endpoint(uuid: str):
+#     messages = await get_messages(uuid)
+#     return {"messages": messages}
+
+
+@router.get("/events/{uuid}")
+async def p2p_events(uuid: str):
+    return StreamingResponse(event_stream(uuid), media_type="text/event-stream")
