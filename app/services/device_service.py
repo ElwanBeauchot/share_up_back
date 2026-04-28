@@ -1,6 +1,6 @@
 from app.db import devices_collection
 from app.schemas import DeviceCreate, DeviceResponse, NearbyRequest
-from datetime import datetime, timedelta, UTC
+from datetime import datetime, timedelta, timezone
 from typing import List
 from app.logging_config import logger
 
@@ -44,6 +44,7 @@ async def get_all_devices() -> List[DeviceResponse]:
 
 async def get_nearby_devices(request: NearbyRequest) -> List[DeviceResponse]:
     logger.info(f"Searching nearby devices for UUID: {request.uuid} at ({request.longitude}, {request.latitude})")
+    ten_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=10)
 
     query = {
         "geolocalisation": {
@@ -56,7 +57,7 @@ async def get_nearby_devices(request: NearbyRequest) -> List[DeviceResponse]:
             }
         },
         "last_seen": {
-            "$gte": datetime.now(UTC) - timedelta(minutes=10)
+            "$gte": ten_minutes_ago,
         },
         "uuid": {
             "$ne": request.uuid

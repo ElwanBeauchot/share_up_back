@@ -9,7 +9,7 @@ import logging
 router = APIRouter(prefix="/devices", tags=["devices"])
 logger = logging.getLogger('share_up_app')
 
-@router.post("/add_db")
+@router.post("/add")
 async def add_device(device: DeviceCreate, dep=Depends(verify_api_key)):
     uuid = device.uuid
     if not uuid:
