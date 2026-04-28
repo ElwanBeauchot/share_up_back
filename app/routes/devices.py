@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter(prefix="/devices", tags=["devices"])
 
-@router.post("/add_db")
+@router.post("/add")
 async def add_device(device: DeviceCreate, dep=Depends(verify_api_key)):
     uuid = device.uuid
     if not uuid:
