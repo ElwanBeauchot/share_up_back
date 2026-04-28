@@ -57,7 +57,7 @@ async def get_nearby_devices(request: NearbyRequest) -> List[DeviceResponse]:
             }
         },
         "last_seen": {
-            "$gte": ten_minutes_ago.isoformat()
+            "$gte": datetime.now(UTC) - timedelta(minutes=10)
         },
         "uuid": {
             "$ne": request.uuid
