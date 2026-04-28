@@ -17,7 +17,7 @@ async def store_offer(message: OfferMessage):
     logger.info(f"Storing offer from {message.from_uuid} to {message.to_uuid}")
     _store_message(message.to_uuid, {
         "type": "offer",
-        "from": message.from_uuid,
+        "from_uuid": message.from_uuid,
         "sdp": message.sdp
     })
 
@@ -26,7 +26,7 @@ async def store_answer(message: AnswerMessage):
     logger.info(f"Storing answer from {message.from_uuid} to {message.to_uuid}")
     _store_message(message.to_uuid, {
         "type": "answer",
-        "from": message.from_uuid,
+        "from_uuid": message.from_uuid,
         "sdp": message.sdp
     })
 
@@ -35,7 +35,7 @@ async def store_ice(message: IceMessage):
     logger.info(f"Storing ICE candidate from {message.from_uuid} to {message.to_uuid}")
     _store_message(message.to_uuid, {
         "type": "ice",
-        "from": message.from_uuid,
+        "from_uuid": message.from_uuid,
         "candidate": message.candidate,
         "sdpMid": message.sdpMid,
         "sdpMLineIndex": message.sdpMLineIndex
