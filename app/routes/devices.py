@@ -4,8 +4,10 @@ from app.core.security import verify_api_key
 from app.schemas import DeviceCreate, DeviceResponse, NearbyRequest, NearbyResponse
 from app.services.device_service import create_or_update_device, get_all_devices, get_nearby_devices
 from typing import List
+import logging
 
 router = APIRouter(prefix="/devices", tags=["devices"])
+logger = logging.getLogger('share_up_app')
 
 @router.post("/add_db")
 async def add_device(device: DeviceCreate, dep=Depends(verify_api_key)):

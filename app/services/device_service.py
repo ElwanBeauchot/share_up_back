@@ -44,7 +44,6 @@ async def get_all_devices() -> List[DeviceResponse]:
 
 async def get_nearby_devices(request: NearbyRequest) -> List[DeviceResponse]:
     logger.info(f"Searching nearby devices for UUID: {request.uuid} at ({request.longitude}, {request.latitude})")
-    ten_minutes_ago = datetime.now(UTC) - timedelta(minutes=10)
 
     query = {
         "geolocalisation": {

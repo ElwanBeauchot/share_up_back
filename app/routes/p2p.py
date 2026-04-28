@@ -3,8 +3,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.core.security import verify_api_key
 from app.schemas import OfferMessage, AnswerMessage, IceMessage, P2PMessageResponse
 from app.services.p2p_service import store_offer, store_answer, store_ice, get_messages
-
+import logging
 router = APIRouter(prefix="/p2p", tags=["p2p"])
+logger = logging.getLogger('share_up_app')
 
 
 @router.post("/offer")
