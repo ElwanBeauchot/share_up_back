@@ -26,7 +26,7 @@ class DeviceUpdate(DeviceBase):
 
 
 class DeviceInDB(DeviceBase):
-    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")
+    id: str
 
 
 class DeviceResponse(DeviceInDB):
