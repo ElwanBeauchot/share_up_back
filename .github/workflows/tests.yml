@@ -28,5 +28,6 @@ jobs:
           MONGO_URL: mongodb://localhost:27017
           DATABASE_NAME: test_db
           DEVICES_COLLECTION_NAME: devices
+          DEBUG: "true"
           API_KEY: test_key
         run: pytest
