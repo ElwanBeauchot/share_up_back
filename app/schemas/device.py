@@ -6,7 +6,7 @@ from bson import ObjectId
 
 class GeoPoint(BaseModel):
     type: str = "Point"
-    coordinates: list[float] = Field(..., min_items=2, max_items=2)  # [longitude, latitude]
+    coordinates: list[float] = Field(..., min_length=2, max_length=2)  # [longitude, latitude]
 
 
 class DeviceBase(BaseModel):
