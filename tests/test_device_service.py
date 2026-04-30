@@ -129,9 +129,9 @@ async def test_get_nearby_devices_response_structure(devices_collection, monkeyp
 async def test_get_nearby_devices_basic(devices_collection, monkeypatch):
     """Test de recherche de devices à proximite"""
     monkeypatch.setattr(device_service, "devices_collection", devices_collection)
-    
+
     current_time = datetime.now(timezone.utc)
-    
+
     # Creer un device de reference
     reference_device = DeviceCreate(
         uuid="ref_device",
@@ -141,7 +141,7 @@ async def test_get_nearby_devices_basic(devices_collection, monkeypatch):
         geolocalisation=GeoPoint(coordinates=[2.35, 48.85])
     )
     await create_or_update_device(reference_device)
-    
+
     # Creer un device à proximite
     nearby_device = DeviceCreate(
         uuid="nearby_device",
@@ -151,11 +151,11 @@ async def test_get_nearby_devices_basic(devices_collection, monkeypatch):
         geolocalisation=GeoPoint(coordinates=[2.35, 48.85])
     )
     await create_or_update_device(nearby_device)
-    
+
     # Chercher les devices à proximite
     request = NearbyRequest(longitude=2.35, latitude=48.85, uuid="ref_device")
     results = await get_nearby_devices(request)
-    
+
     # Le device à proximite doit être trouve
     assert len(results) == 1
     assert results[0].uuid == "nearby_device"
@@ -166,7 +166,7 @@ async def test_get_nearby_devices_basic(devices_collection, monkeypatch):
 async def test_get_nearby_devices_time_filter(devices_collection, monkeypatch):
     """Test du filtre de temps (10 dernières minutes)"""
     monkeypatch.setattr(device_service, "devices_collection", devices_collection)
-    
+
     current_time = datetime.now(timezone.utc)
     old_time = current_time - timedelta(minutes=15)  # Plus de 10 minutes
 
@@ -189,7 +189,7 @@ async def test_get_nearby_devices_time_filter(devices_collection, monkeypatch):
         geolocalisation=GeoPoint(coordinates=[2.35, 48.85])
     )
     await create_or_update_device(old_device)
-    
+
     # Device a proximite et recent
     recent_device = DeviceCreate(
         uuid="recent_device",
@@ -199,11 +199,11 @@ async def test_get_nearby_devices_time_filter(devices_collection, monkeypatch):
         geolocalisation=GeoPoint(coordinates=[2.35, 48.85])
     )
     await create_or_update_device(recent_device)
-    
+
     # Chercher les devices à proximite
     request = NearbyRequest(longitude=2.35, latitude=48.85, uuid="ref_device")
     results = await get_nearby_devices(request)
-    
+
     # Seul le device recent doit être trouve
     assert len(results) == 1
     assert results[0].uuid == "recent_device"
@@ -213,7 +213,7 @@ async def test_get_nearby_devices_time_filter(devices_collection, monkeypatch):
 async def test_get_nearby_devices_distance_filter(devices_collection, monkeypatch):
     """Test du filtre de distance (20 mètres maximum)"""
     monkeypatch.setattr(device_service, "devices_collection", devices_collection)
-    
+
     current_time = datetime.now(timezone.utc)
 
     # Creer un device de reference
@@ -235,7 +235,7 @@ async def test_get_nearby_devices_distance_filter(devices_collection, monkeypatc
         geolocalisation=GeoPoint(coordinates=[2.36, 48.86])  # loin
     )
     await create_or_update_device(far_device)
-    
+
     # Device proche (< 20m)
     close_device = DeviceCreate(
         uuid="close_device",
@@ -245,11 +245,11 @@ async def test_get_nearby_devices_distance_filter(devices_collection, monkeypatc
         geolocalisation=GeoPoint(coordinates=[2.35, 48.85])  # proche
     )
     await create_or_update_device(close_device)
-    
+
     # Chercher les devices à proximite
     request = NearbyRequest(longitude=2.35, latitude=48.85, uuid="ref_device")
     results = await get_nearby_devices(request)
-    
+
     # Seul le device proche doit être trouve
     assert len(results) == 1
     assert results[0].uuid == "close_device"
