@@ -21,6 +21,10 @@ class IceMessage(P2PMessageBase):
     sdpMLineIndex: Optional[int] = None
 
 
+class ControlMessage(P2PMessageBase):
+    reason: Optional[str] = None
+
+
 class P2PMessageResponse(BaseModel):
     type: str
     from_uuid: str

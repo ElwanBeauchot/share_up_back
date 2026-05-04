@@ -1,7 +1,7 @@
 import asyncio
 import json
 from typing import Dict, AsyncIterator
-from app.schemas import OfferMessage, AnswerMessage, IceMessage
+from app.schemas import OfferMessage, AnswerMessage, IceMessage, ControlMessage
 from app.logging_config import logger
 
 # Ancien stockage utilisé pour le polling (remplacé par SSE)
@@ -43,6 +43,15 @@ async def store_ice(message: IceMessage):
 #     messages = _p2p_messages.pop(uuid, [])
 #     logger.info(f"Retrieving {len(messages)} messages for UUID: {uuid}")
 #     return messages
+
+
+async def relay_signal(signal_type: str, message: ControlMessage):
+    logger.info(f"{signal_type} from {message.from_uuid} to {message.to_uuid}")
+    _send(message.to_uuid, {
+        "type": signal_type,
+        "from_uuid": message.from_uuid,
+        "reason": message.reason,
+    })
 
 
 async def event_stream(uuid: str) -> AsyncIterator[str]:
