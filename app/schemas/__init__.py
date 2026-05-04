@@ -13,5 +13,6 @@ from .p2p import (
     OfferMessage,
     AnswerMessage,
     IceMessage,
+    ControlMessage,
     P2PMessageResponse,
 )

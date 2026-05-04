@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import StreamingResponse
 
 from app.core.security import verify_api_key
-from app.schemas import OfferMessage, AnswerMessage, IceMessage, P2PMessageResponse
-from app.services.p2p_service import store_offer, store_answer, store_ice, get_messages
-
+from app.schemas import OfferMessage, AnswerMessage, IceMessage, ControlMessage, P2PMessageResponse
+from app.services.p2p_service import store_offer, store_answer, store_ice, relay_signal, event_stream
+import logging
 router = APIRouter(prefix="/p2p", tags=["p2p"])
+logger = logging.getLogger('share_up_app')
 
 
 @router.post("/offer")
@@ -33,8 +35,30 @@ async def receive_ice(message: IceMessage, dep=Depends(verify_api_key)):
     await store_ice(message)
     return {"status": "ice candidate stored"}
 
+    
+@router.post("/reject")
+async def p2p_reject(message: ControlMessage, dep=Depends(verify_api_key)):
+    if not message.from_uuid or not message.to_uuid:
+        raise HTTPException(status_code=400, detail="from et to requis")
+    await relay_signal("reject", message)
+    return {"status": "reject relayed"}
 
-@router.get("/messages/{uuid}")
-async def get_messages_endpoint(uuid: str):
-    messages = await get_messages(uuid)
-    return {"messages": messages}
+
+@router.post("/cancel")
+async def p2p_cancel(message: ControlMessage, dep=Depends(verify_api_key)):
+    if not message.from_uuid or not message.to_uuid:
+        raise HTTPException(status_code=400, detail="from et to requis")
+    await relay_signal("cancel", message)
+    return {"status": "cancel relayed"}
+
+
+# Ancien endpoint de polling (remplacé par GET /p2p/events/{uuid})
+# @router.get("/messages/{uuid}")
+# async def get_messages_endpoint(uuid: str):
+#     messages = await get_messages(uuid)
+#     return {"messages": messages}
+
+
+@router.get("/events/{uuid}")
+async def p2p_events(uuid: str):
+    return StreamingResponse(event_stream(uuid), media_type="text/event-stream")
