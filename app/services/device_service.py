@@ -53,7 +53,7 @@ async def get_nearby_devices(request: NearbyRequest) -> List[DeviceResponse]:
                     "type": "Point",
                     "coordinates": [request.longitude, request.latitude],
                 },
-                "$maxDistance": 20,
+                "$maxDistance": 80,
             }
         },
         "last_seen": {
